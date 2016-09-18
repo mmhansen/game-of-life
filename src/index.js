@@ -1,17 +1,18 @@
-// Set up your application entry point here...
-
+// Dependencies
 import React from 'react';
 import ReactDOM from 'react-dom';
+// styles
+require('./styles/styles');
 
 class App extends React.Component {
   render (){
+    const board = {
+      rows: 40,
+      cols: 40
+    }
     return (
       <div className="container-fluid">
-      <div className="row">
-        <div className="col-sm-12 col-md-4 offset-md-4">
-        herro world
-        </div>
-      </div>
+        { []
       </div>
     );
   }
