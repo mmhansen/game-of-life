@@ -29,6 +29,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "baffle": "0.3.6",
     "object-assign": "4.1.0",
     "react": "15.3.1",
     "react-dom": "15.3.1",
