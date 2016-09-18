@@ -16,8 +16,8 @@ class App extends React.Component {
     // set the initial empty board and board size
     this.state = {
       board: [],
-      cols: 40,
-      rows: 40,
+      cols: 10,
+      rows: 10,
       generation: 0,
       speed: 1000
     };
@@ -30,25 +30,98 @@ class App extends React.Component {
       });
     });
 
-    
+
   }
 // start click
 handleStart(event){
   event.preventDefault();
-  this.state.generation = setInterval(()=>{
-    // look through each row
-    this.state.board.map((row, index)=>{
-      // look at each cell
-      row.map((cell, dex)=>{
-        // check if cell has < 2 neighbors => it dies
-        // check if cell has 2-3 neighbors => it lives
-        // check if cell has > 3 and is alive neighbors => it dies
-        // check if cell has = 3 neighbors and is dead => it lives
+  this.setState({
+    generation: setInterval(()=>{
+      // look through each row
+      this.state.board.map((row, index)=>{
+        // look at each cell
+        row.map((cell, dex)=>{
+          // get the position up
+          const getN = (index) => {
+            if (index == 0) {
+              return 9;
+            } else {
+              return (index-1);
+            }
+          };
+          // get the position right
+          const getE = (dex) => {
+            if (dex == 9) {
+              return 0;
+            } else {
+              return (dex+1);
+            }
+          };
+          // get the position down
+          const getS = (index) => {
+            if (index == 9) {
+              return 0;
+            } else {
+              return (index+1);
+            }
+          };
+          // get the position left
+          const getW = (dex) => {
+            if (dex == 0) {
+              return 9;
+            } else {
+              return (dex-1);
+            }
+          };
 
-        // each cell interacts with its 8 neighbors
+          const board = this.state.board;
+          // eight neighbors
+          let N = board[getN(index)][dex];
+          let E = board[index][getE(dex)];
+          let S = board[getS(index)][dex];
+          let W = board[index][getW(dex)];
+          let NE = board[getN(index)][getE(dex)];
+          let SE = board[getS(index)][getE(dex)];
+          let SW = board[getS(index)][getW(dex)];
+          let NW = board[getN(index)][getW(dex)];
+          // current position
+          let cPos = board[index][dex];
+          // get the neighbor status
+          const neighbors = [N, NE, E, SE, S, SW, W, NW];
+          let neighborsAlive = 0;
+          let neighborsDead = 0;
+          neighbors.map((neighbor)=>{
+            if (neighbor) {
+              return neighborsAlive++;
+            } else {
+              return neighborsDead++;
+            }
+          });
+          // check if cell has < 2 living neighbors => it dies
+          if (cPos === 1 && neighborsAlive < 2) {
+            // dies
+            cPos = 0;
+          }
+          // check if cell has 2-3 neighbors => it lives
+          if (cPos === 1 && neighborsAlive <= 3) {
+            // nothing changes
+            cPos = 1;
+          }
+          // check if cell has > 3 and is alive neighbors => it dies
+          if (cPos === 1 && neighborsAlive > 3) {
+            // dies
+            cPos = 0;
+          }
+          // check if cell has = 3 neighbors and is dead => it lives
+          if (cPos === 0 && neighborsAlive == 3) {
+            // brought to life
+            cPos = 1;
+          }
+        });
       });
-    });
-  }, this.state.speed);
+    }, this.state.speed)
+
+  });
 }
 // end interval
 handleClear(event){
