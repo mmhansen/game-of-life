@@ -1,7 +1,7 @@
 import React from 'react';
 
 // h1 should baffle until you hover over any of the buttons
-const Header = ({ handleStart, handleClear, handleSlow, handleFast }) => (
+const Header = ({ handleStart, handleClear, handleSlow, handleFast, generation }) => (
   <div className="head">
     <h1>Game of Life</h1>
     <div className="buttons">
@@ -17,6 +17,11 @@ const Header = ({ handleStart, handleClear, handleSlow, handleFast }) => (
       <button
         onClick={handleClear}
         className="btn btn-secondary">Clear</button>
+    </div>
+    <div>
+      <span>
+        Generation : {generation}
+      </span>
     </div>
   </div>
 );

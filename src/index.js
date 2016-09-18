@@ -13,30 +13,33 @@ class App extends React.Component {
   // initial state
   constructor(){
     super();
+    // make the initial board
+    const createBoard  = () => {
+      let gameBoard = [];
+      // rows
+      [...Array(20)].map((item, index) => {
+        gameBoard.push([]);
+        // push random 1 || 0 into columns
+        [...Array(20)].map(() => {
+          gameBoard[index].push(Math.floor(Math.random()*2));
+        });
+      });
+      return gameBoard;
+    }
     // set the initial empty board and board size
     this.state = {
-      board: [],
-      cols: 10,
-      rows: 10,
+      board: createBoard(),
       generation: 0,
       speed: 1000
     };
-    // push board size into board
-    [...Array(this.state.rows)].map((item, index) => {
-      this.state.board.push([]);
-      // push random 1 || 0 into board rows
-      [...Array(this.state.cols)].map(() => {
-        this.state.board[index].push(Math.floor(Math.random()*2));
-      });
-    });
-
-
   }
 // start click
 handleStart(event){
   event.preventDefault();
   this.setState({
     generation: setInterval(()=>{
+
+
       // look through each row
       this.state.board.map((row, index)=>{
         // look at each cell
@@ -44,14 +47,14 @@ handleStart(event){
           // get the position up
           const getN = (index) => {
             if (index == 0) {
-              return 9;
+              return 19;
             } else {
               return (index-1);
             }
           };
           // get the position right
           const getE = (dex) => {
-            if (dex == 9) {
+            if (dex == 19) {
               return 0;
             } else {
               return (dex+1);
@@ -59,7 +62,7 @@ handleStart(event){
           };
           // get the position down
           const getS = (index) => {
-            if (index == 9) {
+            if (index == 19) {
               return 0;
             } else {
               return (index+1);
@@ -68,7 +71,7 @@ handleStart(event){
           // get the position left
           const getW = (dex) => {
             if (dex == 0) {
-              return 9;
+              return 19;
             } else {
               return (dex-1);
             }
@@ -84,8 +87,9 @@ handleStart(event){
           let SE = board[getS(index)][getE(dex)];
           let SW = board[getS(index)][getW(dex)];
           let NW = board[getN(index)][getW(dex)];
-          // current position
-          let cPos = board[index][dex];
+          // current board state
+          let boardState = this.state.board;
+          let currentPosition = boardState[index][dex];
           // get the neighbor status
           const neighbors = [N, NE, E, SE, S, SW, W, NW];
           let neighborsAlive = 0;
@@ -97,26 +101,36 @@ handleStart(event){
               return neighborsDead++;
             }
           });
+          // console.log(boardState[index][dex]);
           // check if cell has < 2 living neighbors => it dies
-          if (cPos === 1 && neighborsAlive < 2) {
+          if (currentPosition === 1 && neighborsAlive < 2) {
             // dies
-            cPos = 0;
+            boardState[index][dex] = 0
+            this.setState({
+              board: boardState
+            })
           }
           // check if cell has 2-3 neighbors => it lives
-          if (cPos === 1 && neighborsAlive <= 3) {
+          if (currentPosition === 1 && neighborsAlive <= 3) {
             // nothing changes
-            cPos = 1;
           }
           // check if cell has > 3 and is alive neighbors => it dies
-          if (cPos === 1 && neighborsAlive > 3) {
+          if (currentPosition === 1 && neighborsAlive > 3) {
             // dies
-            cPos = 0;
+            boardState[index][dex] = 0
+            this.setState({
+              board: boardState
+            })
           }
           // check if cell has = 3 neighbors and is dead => it lives
-          if (cPos === 0 && neighborsAlive == 3) {
+          if (currentPosition === 0 && neighborsAlive == 3) {
             // brought to life
-            cPos = 1;
+            boardState[index][dex] = 1
+            this.setState({
+              board: boardState
+            })
           }
+
         });
       });
     }, this.state.speed)
@@ -132,7 +146,7 @@ handleClear(event){
 handleFast(event){
   event.preventDefault();
   this.setState({
-    speed: 500
+    speed: 300
   });
 }
 // slow ticks
@@ -152,6 +166,7 @@ handleSlow(event){
             handleClear={this.handleClear.bind(this)}
             handleFast={this.handleFast.bind(this)}
             handleSlow={this.handleSlow.bind(this)}
+            generation={this.state.generation}
             />
           <Game
             board={this.state.board}/>
