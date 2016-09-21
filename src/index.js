@@ -30,7 +30,7 @@ class App extends React.Component {
     this.state = {
       board: createBoard(),
       ticks: 0,
-      speed: 1000,
+      speed: 500,
       tick: 0
     };
   }
@@ -56,6 +56,7 @@ checkCell(col, row){
 }
 // check board
 checkBoard(){
+  console.log("check boards")
   let newBoard = [];
   // loop through index 0-29
     for(let i = 0; i < 30; i++) {
@@ -64,25 +65,22 @@ checkBoard(){
         // this returns the new state of the cell passed to it
         col.push(this.checkCell(i, j));
       }
+// when done looping row, push in the new board
       newBoard.push(col);
     }
-  // when done looping, push in the new board
-  this.setState({
-    board: newBoard,
-    tick: this.tick++
-  });
+// when done looping board, push it into state
+this.setState({
+  board: newBoard
+});
+  //this.increment();
+
 }
 // increment
-increment(){
-  this.setState({
-    tick: this.tick++
-  });
-}
 
 // start click
 handleStart(event){
   event.preventDefault();
-  this.clock = setInterval(this.checkBoard.bind(this), 1000);
+  this.clock = setInterval(this.checkBoard.bind(this), this.state.speed);
 }
 // end interval
 handleClear(event){
