@@ -1,5 +1,5 @@
 //#BDBDBD
-$main-background: #FF5722;
+$background: #F0F0F0;
 $alive: #03A9F4;
 /* General Styling */
 body {
@@ -7,55 +7,45 @@ body {
   font-family: 'Space Mono', sans-serif;
   box-sizing: border-box;
   text-align: center;
-  background: $main-background;
+  background: $background;
 }
-@media only screen and (max-width: 768px) {
-    /* For mobile phones: */
-    body {
-      margin: 16px;
-    }
-}
-@media only screen and (max-width: 1200px) {
-  #game-board {
-    h1 {
-      display: block;
-    }
-    button {
-      font-size: 12px;
-      margin: 5px;
-      display: block;
-    }
-  }
-}
+
 /* App styling */
 #game-board {
-  h1 {
-    display: inline-block;
-    margin-right: 16px;
-  }
-  button {
-    display: inline-block;
-    vertical-align: top;
-    margin: 8px;
-    margin-bottom: 24px;
-    &:active,
-    &:focus {
-      border: none;
-      outline: 0;
-    }
-  }
-  .head {
-    text-align: center;
-  }
+  /* General */
   .game-card {
     background: white;
-     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-     padding: 20px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    padding: 50px 40px;
+    display: inline-block;
   }
+  /* Header Styling */
+  .head {
+    text-align: center;
+    display: inline-block;
+    h1 {
+      display: inline-block;
+    }
+    button {
+      display: inline-block;
+      vertical-align: top;
+      margin: 8px;
+      &:active,
+      &:focus {
+        border: none;
+        outline: 0;
+      }
+    }
+  }
+  .active {
+    background: lighten($alive, 30%);
+  }
+
+  /* Board Styling */
   .board {
+    margin-top: 12px;
     border: 2px solid rgba(0,0,0,0.3);
     display: inline-block;
-    margin-bottom: 16px;
     .col-sm-12 {
       padding: 0;
     }
@@ -74,6 +64,32 @@ body {
   }
   .dead {
     background: white;
+  }
+}
 
+
+
+
+/* Mobile */
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    body {
+      margin: 16px;
+    }
+}
+@media only screen and (max-width: 1200px) {
+  #game-board {
+    h1 {
+      display: block;
+    }
+    .game-card {
+      padding: 10px;
+      padding-bottom: 5px;
+    }
+    button {
+      font-size: 12px;
+      margin: 5px;
+      display: inline-block;
+    }
   }
 }

@@ -1,6 +1,10 @@
 import React from 'react';
 
 class Game extends React.Component {
+  onClick(coords){
+    //console.log(coords)
+    this.props.handleClick(coords)
+  }
   render (){
     return (
       <div className="board container">
@@ -18,14 +22,18 @@ class Game extends React.Component {
                       return (
                         <div
                           key={"c"+dex}
-                          className="alive cell"/>
+                          className="alive cell"
+                          onClick={this.onClick.bind(this, index+','+dex)}
+                          />
                       )
                     }
                     else {
                       return (
                         <div
                           key={"c"+dex}
-                          className="dead cell"/>
+                          className="dead cell"
+                          onClick={this.onClick.bind(this, index+','+dex)}
+                          />
                       )
                     }
                   })

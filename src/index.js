@@ -30,9 +30,23 @@ class App extends React.Component {
     this.state = {
       board: createBoard(),
       ticks: 0,
-      speed: 500,
-      tick: 0
+      speed: 100,
+      tick: 0,
+      playing: false,
+      empty: true
     };
+  }
+createBoard () {
+    let gameBoard = [];
+    // rows
+    [...Array(30)].map((item, index) => {
+      gameBoard.push([]);
+      // push random 1 || 0 into columns
+      [...Array(30)].map(() => {
+        gameBoard[index].push(Math.floor(Math.random()*2));
+      });
+    });
+    return gameBoard;
   }
 // check cell
 checkCell(col, row){
@@ -56,7 +70,6 @@ checkCell(col, row){
 }
 // check board
 checkBoard(){
-  console.log("check boards")
   let newBoard = [];
   // loop through index 0-29
     for(let i = 0; i < 30; i++) {
@@ -72,41 +85,73 @@ checkBoard(){
 this.setState({
   board: newBoard
 });
+this.state['tick'] += 1;
   //this.increment();
-
 }
-// increment
+createEmptyBoard () {
+ let gameBoard = [];
+ // rows
+ [...Array(30)].map((item, index) => {
+   gameBoard.push([]);
+   // push random 1 || 0 into columns
+   [...Array(30)].map(() => {
+     gameBoard[index].push(0);
+   });
+ });
+ return gameBoard;
+}
+// handle cell clicked
+handleCellClicked(coords){
+  let coordSplit = coords.split(',');
+  let newBoard = this.state.board;
+  newBoard[coordSplit[0]][coordSplit[1]] = 1;
 
+  this.setState({board: newBoard, empty: false});
+}
 // start click
 handleStart(event){
   event.preventDefault();
-  this.clock = setInterval(this.checkBoard.bind(this), this.state.speed);
+  // if the game is already running
+  if (this.state.playing) {
+    this.setState({playing: false})
+    clearInterval(this.clock);
+  } else {
+    this.setState({playing: true})
+    this.clock = setInterval(this.checkBoard.bind(this), this.state.speed);
+  }
+  // populate board if cleared
+  if (this.state.empty) {
+    this.setState({board: this.createBoard(), empty: false, tick : 0})
+  }
 }
 // end interval
 handleClear(event){
   event.preventDefault();
   clearInterval(this.clock);
-  console.log('stopping');
+  this.setState({tick: 0});
+  this.setState({board: this.createEmptyBoard(), empty: true})
+
 }
+
 // fast ticks
 handleFast(event){
   event.preventDefault();
   this.setState({
-    speed: 100
+    speed: 50
   });
 }
 // slow ticks
 handleSlow(event){
   event.preventDefault();
   this.setState({
-    speed: 500
+    speed: 300
   });
 }
   render (){
     return (
       <div className="container" id="game-board">
         <div className="row">
-          <div className="col-sm-12 col-md-8 offset-md-2 game-card">
+          <div className="game-card">
           <Header
             handleStart={this.handleStart.bind(this)}
             handleClear={this.handleClear.bind(this)}
@@ -114,8 +159,11 @@ handleSlow(event){
             handleSlow={this.handleSlow.bind(this)}
             tick={this.state.tick}
             />
+          <br />
           <Game
-            board={this.state.board}/>
+            board={this.state.board}
+            handleClick={this.handleCellClicked.bind(this)}
+            />
         </div>
       </div>
       </div>
